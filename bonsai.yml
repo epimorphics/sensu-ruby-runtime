@@ -3,7 +3,7 @@ builds:
 - platform: "alpine"
   arch: "amd64"
   asset_filename: "#{repo}_#{version}_ruby-3.1.2_alpine_linux_amd64.tar.gz"
-  sha_filename: "#{repo}_#{version}_sha512-checksums.txt"
+  sha_filename: "#{repo}_#{version}_ruby-3.1.2_sha512-checksums.txt"
   filter:
   -  "entity.system.os == 'linux'"
   -  "entity.system.arch == 'amd64'"
@@ -12,7 +12,7 @@ builds:
 - platform: "debian"
   arch: "amd64"
   asset_filename: "#{repo}_#{version}_ruby-3.1.2_debian_linux_amd64.tar.gz"
-  sha_filename: "#{repo}_#{version}_sha512-checksums.txt"
+  sha_filename: "#{repo}_#{version}_ruby-3.1.2_sha512-checksums.txt"
   filter:
   -  "entity.system.os == 'linux'"
   -  "entity.system.arch == 'amd64'"
@@ -20,7 +20,7 @@ builds:
 - platform: "almalinux"
   arch: "amd64"
   asset_filename: "#{repo}_#{version}_ruby-3.1.2_almalinux9.3_linux_amd64.tar.gz"
-  sha_filename: "#{repo}_#{version}_sha512-checksums.txt"
+  sha_filename: "#{repo}_#{version}_ruby-3.1.2_sha512-checksums.txt"
   filter:
   -  "entity.system.os == 'linux'"
   -  "entity.system.arch == 'amd64'"
@@ -29,7 +29,7 @@ builds:
 - platform: "amzn2"
   arch: "amd64"
   asset_filename: "#{repo}_#{version}_ruby-3.1.2_amzn2_linux_amd64.tar.gz"
-  sha_filename: "#{repo}_#{version}_sha512-checksums.txt"
+  sha_filename: "#{repo}_#{version}_ruby-3.1.2_sha512-checksums.txt"
   filter:
   -  "entity.system.os == 'linux'"
   -  "entity.system.arch == 'amd64'"
