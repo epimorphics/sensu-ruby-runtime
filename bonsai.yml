@@ -24,7 +24,7 @@ builds:
   filter:
   -  "entity.system.os == 'linux'"
   -  "entity.system.arch == 'amd64'"
-  -  "entity.system.platform != 'almalinux'"
+  -  "entity.system.platform == 'almalinux'"
   -  "entity.system.platform_family == 'rhel'"
 - platform: "amzn2"
   arch: "amd64"
