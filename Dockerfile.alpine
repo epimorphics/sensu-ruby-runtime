@@ -1,6 +1,7 @@
 FROM alpine:3.14.1
 
-ARG RUBY_VERSION=2.4.4
+ARG RUBY_VERSION=3.1.2
+ARG RUBY_INSTALL=0.9.3
 ARG ASSET_VERSION=local_build
 
 RUN apk --no-cache add build-base gmp-dev zlib-dev gdbm-dev db-dev readline-dev libffi-dev coreutils yaml-dev linux-headers autoconf
@@ -8,13 +9,13 @@ RUN apk --no-cache add openssh-client openssl-dev libc6-compat
 RUN apk --no-cache add wget git sudo bash bash-doc bash-completion
 
 
-RUN wget -O ruby-install-0.7.0.tar.gz https://github.com/postmodern/ruby-install/archive/v0.7.0.tar.gz 
-RUN tar -xzvf ruby-install-0.7.0.tar.gz 
-RUN cd ruby-install-0.7.0/ && ac_cv_func_isnan=yes ac_cv_func_isinf=yes make install 
+RUN wget -O ruby-install-${RUBY_INSTALL}.tar.gz https://github.com/postmodern/ruby-install/archive/v${RUBY_INSTALL}.tar.gz 
+RUN tar -xzvf ruby-install-${RUBY_INSTALL}.tar.gz 
+RUN cd ruby-install-${RUBY_INSTALL}/ && ac_cv_func_isnan=yes ac_cv_func_isinf=yes make install 
 RUN ac_cv_func_isnan=yes ac_cv_func_isinf=yes ruby-install ruby ${RUBY_VERSION} -- --enable-load-relative --disable-install-doc 
-RUN PATH=$PATH:/opt/rubies/ruby-${RUBY_VERSION}/bin/ && gem install --no-ri --no-rdoc ffi
-RUN PATH=$PATH:/opt/rubies/ruby-${RUBY_VERSION}/bin/ && gem install --no-ri --no-rdoc unf_ext
-RUN PATH=$PATH:/opt/rubies/ruby-${RUBY_VERSION}/bin/ && gem install --no-ri --no-rdoc sys-filesystem
+RUN PATH=$PATH:/opt/rubies/ruby-${RUBY_VERSION}/bin/ && gem install --no-force --no-document ffi
+RUN PATH=$PATH:/opt/rubies/ruby-${RUBY_VERSION}/bin/ && gem install --no-force --no-document unf_ext
+RUN PATH=$PATH:/opt/rubies/ruby-${RUBY_VERSION}/bin/ && gem install --no-force --no-document sys-filesystem
 
 RUN LIBS=$(find /opt/rubies/ruby-${RUBY_VERSION} -type f -exec ldd {} 2>/dev/null \;|  grep "=>" | grep -v "vdso.so.1" | awk '{print $3}'| sort -u ) && \
   for f in $LIBS; do if [ -e $f ]; then echo "Copying Library: $f" && cp $f /opt/rubies/ruby-${RUBY_VERSION}/lib/; fi; done 

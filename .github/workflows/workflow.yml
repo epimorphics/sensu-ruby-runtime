@@ -1,0 +1,33 @@
+on:
+  push:
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+
+name: Create Release
+
+jobs:
+  build:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set environment
+        run: |
+          echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+          echo "NAME=${GITHUB_REPOSITORY#epimorphics/}" >> $GITHUB_ENV
+
+      - name: Build assets
+        run: make NAME=${{ env.NAME }} VERSION=${{ env.VERSION }} clean all
+
+      - name: Create release
+        id: create_release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "dist/*"
+          body: |
+            Automated release ${{ github.ref }}
+          name: Release ${{ github.ref }}
+          tag: ${{ github.ref }}
