@@ -2,7 +2,7 @@ on:
   push:
     # Sequence of patterns matched against refs/tags
     tags:
-      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+      - '*'
 
 name: Create Release
 
@@ -16,8 +16,7 @@ jobs:
 
       - name: Set environment
         run: |
-          echo "REFERENCE=${GITHUB_REF}" | tee -a $GITHUB_ENV
-          echo "VERSION=${GITHUB_REF#refs/tags/v}" | tee -a $GITHUB_ENV
+          echo "VERSION=${GITHUB_REF#refs/tags/}" | tee -a $GITHUB_ENV
           echo "NAME=${GITHUB_REPOSITORY#epimorphics/}" | tee -a $GITHUB_ENV
 
       - name: Build assets
