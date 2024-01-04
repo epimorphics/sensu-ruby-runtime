@@ -11,11 +11,11 @@ jobs:
       uses: actions/checkout@v2
     - name: select platform to test
       id: random_platform
-      run: echo ::set-output name=PLATFORM::$(./build_scripts/random_test_platform.sh)    
+      run: echo PLATFORM=$(./build_scripts/random_test_platform.sh) | tee -a $GITHUB_ENV
     - name: Get the version
       id: get_version
       if: github.event_name == 'push' && contains(github.ref, 'refs/tags/') 
-      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      run: echo VERSION=${GITHUB_REF/refs\/tags\//} | tee -a $GITHUB_ENV
     - name: echo settings
       id: echo_settings
       run: "echo platform: ${{ steps.random_platform.outputs.PLATFORM }} version: ${{ steps.get_version.outputs.VERSION }}" 
@@ -43,14 +43,14 @@ jobs:
         DOCKER_USER: ${{ secrets.DOCKER_USER }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}  
       run: ./build_scripts/build_debian_platforms.sh
-    - name: Build and test centos 
-      if: steps.get_version.outputs.VERSION || github.event_name == 'pull_request' || steps.random_platform.outputs.PLATFORM == 'centos' 
+    - name: Build and test almalinux 
+      if: steps.get_version.outputs.VERSION || github.event_name == 'pull_request' || steps.random_platform.outputs.PLATFORM == 'alma' 
       env: 
         TAG: ${{ steps.get_version.outputs.VERSION }}
         REPO_SLUG: ${{ github.repository }}  
         DOCKER_USER: ${{ secrets.DOCKER_USER }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}  
-      run: ./build_scripts/build_centos_platforms.sh
+      run: ./build_scripts/build_alma_platforms.sh
     - name: create checksum file
       run: ./checksum.sh 
     - name: Release tagged version

@@ -28,12 +28,10 @@ how to get started with this project.
 
 | Asset Platform | Tested Operating Systems Docker Images |
 |:---------------|:-------------------------|
-|  alpine  (based on alpine:3.8)   | Alpine(3, 3.8, latest)                                      |
-|  centos7  (based on centos:7)     | Centos(7,8), Debian(8, 9, 10), Ubuntu(14.04, 16.04, 18.04, 20.04)     |
-|  centos8 (based on centos:8)     | Centos(8), Debian(10), Ubuntu(20.04)  |
-|  debian  (based on debian:9)     | Debian(8, 9, 10), Ubuntu(14.04, 16.04, 18.04, 20.04), Centos(7,8)    |
-|  amnz1   (based on amazonlinux:1)     | Debian(8, 9, 10), Ubuntu(14.04, 16.04, 18.04, 20.04), Centos(7,8)    |
-|  amnz2   (based on amazonlinux:2)     | Debian(10), Ubuntu(18.04, 20.04), Centos(8)    |
+|  almalinx (based on almalinx:9)           | Alma(9), Debian(10), Ubuntu(22.04)  |
+|  alpine  (based on alpine:3.14)           | Alpine(3, 3.14, latest)             |
+|  debian  (based on debian:10)             | Alma(9), Debian(10), Ubuntu(22.04)  |
+|  amazon  (based on amazonlinux:2)         | Alma(9), Debian(10), Ubuntu(22.04)  |
 
 ## OpenSSL Cert Dir
 Please note that when using the ruby runtime asset built on a target OS that is different from the build platform, you may need to explicitly set the SSL_CERT_DIR environment variable to match the target OS filesystem.  Example: CentOS configures it libssl libraries to look for certs by default in `/etc/pki/tls/certs` and Debian/Ubuntu use `/usr/lib/ssl/certs`. The CentOS runtime asset when used on a Debian system would require the use of SSL_CERT_DIR override in the check command to correctly set the cert path to `/usr/lib/ssl/certs`
@@ -47,8 +45,8 @@ Please note the following instructions:
    a local_build Sensu Go Asset.
 
    ```
-   $ docker build --build-arg "RUBY_VERSION=2.4.4" -t sensu-ruby-runtime:2.4.4-alpine -f Dockerfile.alpine .
-   $ docker build --build-arg "RUBY_VERSION=2.4.4" -t sensu-ruby-runtime:2.4.4-debian -f Dockerfile.debian .
+   $ docker build --build-arg "RUBY_VERSION=3.1.2" -t sensu-ruby-runtime:3.1.2-alpine -f Dockerfile.alpine .
+   $ docker build --build-arg "RUBY_VERSION=3.1.2" -t sensu-ruby-runtime:3.1.2-debian -f Dockerfile.debian .
    ```
 
 2. Extract your new sensu-ruby asset, and get the SHA-512 hash for your
@@ -56,8 +54,8 @@ Please note the following instructions:
 
    ```
    $ mkdir assets
-   $ docker run -v "$PWD/assets:/assets" sensu-ruby-runtime:2.4.4-debian cp /assets/sensu-ruby-runtime_2.4.4_debian_linux_amd64.tar.gz /assets/
-   $ shasum -a 512 assets/sensu-ruby-runtime_2.4.4_debian_linux_amd64.tar.gz
+   $ docker run -v "$PWD/assets:/assets" sensu-ruby-runtime:3.1.2-debian cp /assets/sensu-ruby-runtime_3.1.2_debian_linux_amd64.tar.gz /assets/
+   $ shasum -a 512 assets/sensu-ruby-runtime_3.1.2_debian_linux_amd64.tar.gz
    ```
 
 3. Put that asset somewhere that your Sensu agent can fetch it. Perhaps add it to the Bonsai asset index!
@@ -66,7 +64,7 @@ Please note the following instructions:
 
 3. Create an asset resource in Sensu Go.
 
-   First, create a configuration file called `sensu-ruby-runtime-2.4.4-debian.json` with
+   First, create a configuration file called `sensu-ruby-runtime-3.1.2-debian.json` with
    the following contents:
 
    ```
@@ -74,13 +72,13 @@ Please note the following instructions:
      "type": "Asset",
      "api_version": "core/v2",
      "metadata": {
-       "name": "sensu-ruby-runtime-2.4.4-debian",
+       "name": "sensu-ruby-runtime-3.1.2-debian",
        "namespace": "default",
        "labels": {},
        "annotations": {}
      },
      "spec": {
-       "url": "http://your-asset-server-here/assets/sensu-ruby-runtime-2.4.4-debian.tar.gz",
+       "url": "http://your-asset-server-here/assets/sensu-ruby-runtime-3.1.2-debian.tar.gz",
        "sha512": "4f926bf4328fbad2b9cac873d117f771914f4b837c9c85584c38ccf55a3ef3c2e8d154812246e5dda4a87450576b2c58ad9ab40c9e2edc31b288d066b195b21b",
        "filters": [
          "entity.system.os == 'linux'",
@@ -94,7 +92,7 @@ Please note the following instructions:
    Then create the asset via:
 
    ```
-   $ sensuctl create -f sensu-ruby-runtime-2.4.4-debian.json
+   $ sensuctl create -f sensu-ruby-runtime-3.1.2-debian.json
    ```
 
 4. Create a second asset containing a Ruby script.
@@ -134,7 +132,7 @@ Please note the following instructions:
      },
      "spec": {
        "command": "helloworld.rb",
-       "runtime_assets": ["sensu-ruby-runtime-2.4.4-debian", "helloworld-v0.1"],
+       "runtime_assets": ["sensu-ruby-runtime-3.1.2-debian", "helloworld-v0.1"],
        "publish": true,
        "interval": 10,
        "subscriptions": ["docker"]
